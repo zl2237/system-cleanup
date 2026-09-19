@@ -2,7 +2,9 @@
 
 > C 盘又红了，但不敢乱删？环境变量一堆，不知道哪个还有用？软件卸载了，垃圾还躺在 AppData 里？
 
-**一个让 TRAE 帮你安全清理 Windows 的 Skill。** 你说需求，它扫描、出报告、等你点头，才动手。
+**一个让 AI 编程助手安全帮你清理 Windows 的 Skill。** 你说需求，它扫描、出报告、等你点头，才动手。
+
+适用于任何支持 Agent Skills 标准（SKILL.md 约定）的 agent：**Trae / Claude Code / Cursor / CodeBuddy / ZCode** …有对话栏的地方就能用。
 
 ## 它是怎么工作的
 
@@ -33,19 +35,15 @@
 
 ## 安装（30 秒）
 
-全局安装（推荐，所有会话可用）：
+把仓库 clone 到你所用 agent 的 skills 目录，目录名保持 `system-cleanup`：
 
-```powershell
-git clone https://github.com/<你的用户名>/trae-skill-system-cleanup.git "$env:USERPROFILE\.trae-cn\skills\system-cleanup"
-```
+| Agent | 安装位置 |
+|---|---|
+| **Trae** | `git clone https://github.com/zl2237/system-cleanup.git "$env:USERPROFILE\.trae-cn\skills\system-cleanup"`（全局）或项目 `.trae\skills\` |
+| **Claude Code** | `git clone https://github.com/zl2237/system-cleanup.git "$env:USERPROFILE\.claude\skills\system-cleanup"` |
+| **Cursor / CodeBuddy / ZCode 等** | clone 到该 agent 对应的 skills 目录（参考其官方文档），同样支持 |
 
-项目级安装（仅当前项目）：
-
-```powershell
-git clone https://github.com/<你的用户名>/trae-skill-system-cleanup.git .trae\skills\system-cleanup
-```
-
-重启 TRAE 或新开会话，然后直接说：
+也可以下载 ZIP 解压到上述目录。装完**重启 agent 或新开会话**，直接说：
 
 > 帮我清理 C 盘 / 看看哪些环境变量失效了 / 找找卸载残留
 
@@ -84,6 +82,9 @@ A: 扫描是白名单制 + 交叉比对，拿不准的会单独标出来问你�
 
 **Q: 出问题怎么回滚？**
 A: 环境变量有 `.reg` 备份可直接导入；文件删除走回收站逻辑外的目录均有日志记录（Temp/缓存类本身可再生）。
+
+**Q: 不是 Trae 用户，能用吗？**
+A: 能。核心是标准 SKILL.md 格式 + 纯 PowerShell 脚本，任何支持 Agent Skills 的客户端加载后即用；脚本本身也可以脱离 agent 手动运行（每个脚本头部有用法注释）。
 
 ## License
 
