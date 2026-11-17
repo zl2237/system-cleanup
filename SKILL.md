@@ -1,6 +1,6 @@
 ---
 name: "system-cleanup"
-description: "Windows 系统深度清理与磁盘整理工具集：失效环境变量扫描清理、已卸载软件残留清除、全盘垃圾文件(临时/日志/缓存)清理、磁盘功能规划与文件迁移。当用户提到 C盘满了/C盘瘦身/清理垃圾/环境变量太多/卸载残留/磁盘整理/分区规划 时调用。"
+description: "Windows 系统深度清理与磁盘整理工具集：失效环境变量扫描清理、已卸载软件残留清除、全盘垃圾文件(临时/日志/缓存)清理、开发者缓存专项(npm/Maven/Gradle/Conda等)、大文件定位、磁盘功能规划与文件迁移。当用户提到 C盘满了/C盘瘦身/清理垃圾/环境变量太多/卸载残留/磁盘整理/分区规划/开发缓存/依赖占空间/大文件 时调用。"
 ---
 
 # Windows 系统清理与磁盘整理
@@ -14,7 +14,7 @@ description: "Windows 系统深度清理与磁盘整理工具集：失效环境�
 1. **全部四项**
 2. **模块1 环境变量**：扫描并清理失效环境变量与 PATH 死条目
 3. **模块2 卸载残留**：找出已卸载软件遗留的孤儿目录
-4. **模块3 垃圾清理**：全盘扫描临时文件/日志/缓存等可删文件
+4. **模块3 垃圾清理**：全盘扫描临时文件/日志/缓存/开发者缓存等可删文件，可选用大文件定位
 5. **模块4 磁盘规划**：磁盘功能划分、文件迁移、输出使用规范
 
 ## 通用安全规则（每个模块都适用）
@@ -57,6 +57,8 @@ description: "Windows 系统深度清理与磁盘整理工具集：失效环境�
 
 ```
 扫描: scripts/junk-scan.ps1 -OutDir <输出目录>
+可选: scripts/dev-cache-scan.ps1 -OutDir <输出目录>     # 开发者缓存专项(npm/Maven/Gradle/Conda/Docker…)
+可选: scripts/largefile-scan.ps1 -Drives C: -MinGB 1   # 大文件Top-N定位(模块4盘点时也可用)
 清理: scripts/clean-executor.ps1 -PlanFile <输出目录>\junk-plan.json
 ```
 
@@ -65,10 +67,18 @@ description: "Windows 系统深度清理与磁盘整理工具集：失效环境�
 3. 用户逐项或批量确认后写 junk-plan.json 执行；结束时报告释放空间
 4. 建议用户后续开启 Windows"存储感知"
 
+### 开发者缓存分级规则（dev-cache-scan）
+
+- **safe**（删后自动重建）：Go构建/NuGet下载/electron/node-gyp——可并入 junk-plan 直接清
+- **redownload**（可删，代价是重新联网下载）：npm/pnpm/yarn/pip/uv/Gradle/NuGet全局包/Go模块/Cargo/HuggingFace/PyTorch——展示时必须明示"删后首次使用会重新下载"，用户同意才清
+- **confirm**（不建议脚本直接删）：Maven本地仓库、Conda包缓存——优先给官方命令（如 `conda clean --all`），用户明确坚持才处理
+- **report**（永不删除）：Docker/WSL 的 ext4.vhdx 虚拟磁盘——只报大小并给指引（Docker Desktop 内清理或迁移、WSL `wsl --export/--import`），绝不写进清理计划
+
 ## 模块 4：磁盘规划与迁移
 
 ```
 盘点: scripts/disk-inventory.ps1 -OutDir <输出目录>
+可选: scripts/largefile-scan.ps1 -Drives C:,D: -MinGB 1  # 文件级定位大块头, 补充目录级盘点
 迁移: scripts/migrate-runner.ps1 -PlanFile <输出目录>\migrate-plan.json
 ```
 
