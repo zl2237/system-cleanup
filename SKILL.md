@@ -25,6 +25,7 @@ description: "Windows 系统深度清理与磁盘整理工具集：失效环境�
 - 脚本用 `powershell -NoProfile -ExecutionPolicy Bypass -File <path>` 运行；需要管理员权限的（HKLM、系统目录）脚本会自动 UAC 提权重启自身
 - 遇到文件被占用删不掉：跳过并在日志标注，建议重启后再跑，不要强杀进程
 - 永不触碰：`hiberfil.sys`、`pagefile.sys`、`Windows.old`（仅报告）、系统运行中的关键目录
+- 输出的 JSON 均为无 BOM UTF-8；PowerShell 5.1 读取必须 `Get-Content -Raw -Encoding UTF8`，否则中文按 ANSI 误读、GBK 双字节会吞掉引号导致 JSON 结构损坏
 
 ## 模块 1：失效环境变量
 
