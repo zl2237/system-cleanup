@@ -10,6 +10,7 @@
       { "type": "removeDir",       "path": "C:\\Users\\x\\AppData\\Local\\DeadSoft" },
       { "type": "cleanDir",        "path": "C:\\Windows\\Temp", "keepEmpty": true }
   ] }
+  keepEmpty 省略时默认 true(保留目录壳, Temp类系统位置必须保留); false 时清空后连目录本身一并移除
 .EXAMPLE
   powershell -NoProfile -ExecutionPolicy Bypass -File clean-executor.ps1 -PlanFile plan.json -OutDir report
 #>
@@ -93,6 +94,11 @@ foreach ($a in $plan.actions) {
                 Get-ChildItem -LiteralPath $a.path -Recurse -Force -EA SilentlyContinue |
                     Where-Object { $_.PSIsContainer -eq $false } |
                     ForEach-Object { $freed += $_.Length; Remove-Item -LiteralPath $_.FullName -Force -EA SilentlyContinue }
+                if ($a.keepEmpty -eq $false) {
+                    Remove-Item -LiteralPath $a.path -Recurse -Force -EA SilentlyContinue
+                    if (Test-Path -LiteralPath $a.path) { Log "[清空] 目录有占用未删尽(保留): $($a.path)" 'Yellow' }
+                    else { Log "[清空] 目录已一并移除: $($a.path)" 'DarkGray' }
+                }
                 Log ("[清空] {0}  释放约 {1} MB" -f $a.path, [math]::Round($freed/1MB,1)) 'Green'; $done++
             } else { Log "[清空] 不存在 $($a.path)" 'DarkGray' }
         }

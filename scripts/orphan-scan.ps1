@@ -73,7 +73,7 @@ $rpt.Add("")
 foreach ($g in ($dirs | Group-Object Zone)) {
     $rpt.Add("===== $($g.Name) =====")
     $g.Group | Sort-Object GB -Descending | Select-Object -First 40 | ForEach-Object {
-        $rpt.Add(('{0,8} GB  {1}  {2}  ({2})' -f $_.GB, $_.LastWrite, $_.Name))
+        $rpt.Add(('{0,8} GB  {1}  {2}' -f $_.GB, $_.LastWrite, $_.Name))
     }
 }
 $rpt | Out-String | Out-File "$OutDir\orphan-report.txt" -Encoding utf8
