@@ -13,6 +13,7 @@ C 盘又红了，但不敢乱删？环境变量一堆，不知道哪个还有用
 [![Standard](https://img.shields.io/badge/Standard-Agent_Skills_%28SKILL.md%29-8A2BE2)](https://github.com/zl2237/system-cleanup)
 [![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen)](https://github.com/zl2237/system-cleanup/pulls)
+[![Gitee](https://img.shields.io/badge/Gitee-镜像-red)](https://gitee.com/zl2237/system-cleanup)
 
 **如果它帮你抢回了 C 盘空间，顺手点个 [⭐ Star](https://github.com/zl2237/system-cleanup) —— 让更多"不敢乱删"的人看到它 🙏**
 
